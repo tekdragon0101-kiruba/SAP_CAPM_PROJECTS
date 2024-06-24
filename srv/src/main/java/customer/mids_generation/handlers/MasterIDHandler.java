@@ -25,13 +25,9 @@ public class MasterIDHandler implements EventHandler{
     public void generateId(GenerateIDsContext context){
         int count = context.getCount();
 
-        long[] ids = new long[count];
-        for (int i = 0; i < count; i++) {
-            ids[i]= idGenerator.generateNextId();
-        }
         List<Long> result = new ArrayList<>();
-        for (long id : ids) {
-            result.add(id);
+        for (int i = 0; i < count; i++) {
+            result.add(idGenerator.generateNextId());
         }
         context.setResult(result);
     }

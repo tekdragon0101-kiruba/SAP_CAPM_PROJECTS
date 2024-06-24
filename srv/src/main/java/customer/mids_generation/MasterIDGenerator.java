@@ -92,7 +92,7 @@ public class MasterIDGenerator {
         id |= sequence;
         // logging
         System.out.println("Master Id: [ " + id + " ]");
-        System.out.println("Timestamp: " + timestamp + " | NodeId: " + nodeId + " | SequenceID: " + sequence);
+        System.out.println("Current Timestamp: " + timestamp + " | NodeId: " + nodeId + " | SequenceID: " + sequence);
         // Incrementing the node id
         setNodeId(nodeIdIncrement(nodeId));
         return id;
