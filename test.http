@@ -1,0 +1,4 @@
+@baseUrl = http://localhost:8080/
+
+GET {{baseUrl}}odata/v4/MasterIDService/GenerateIDs(count=5) HTTP/1.1
+###
