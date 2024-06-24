@@ -1,4 +1,4 @@
 @baseUrl = http://localhost:8080/
 
-GET {{baseUrl}}odata/v4/MasterIDService/GenerateIDs(count=50) HTTP/1.1
+GET {{baseUrl}}odata/v4/MasterIDService/GenerateIDs(count=1) HTTP/1.1
 ###

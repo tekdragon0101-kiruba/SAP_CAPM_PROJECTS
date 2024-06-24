@@ -91,8 +91,8 @@ public class MasterIDGenerator {
         id |= ((long) nodeId << (TOTAL_BITS - EPOCH_BITS - NODE_ID_BITS));
         id |= sequence;
         // logging
-        System.out.println("Master Id: [ " + id + " ]");
-        System.out.println("Current Timestamp: " + timestamp + " | NodeId: " + nodeId + " | SequenceID: " + sequence);
+        System.out.print("Master ID: [ " + id + " ] | ");
+        System.out.println("Current Timestamp: " + timestamp + " | NodeID: " + nodeId + " | SequenceID: " + sequence);
         // Incrementing the node id
         setNodeId(nodeIdIncrement(nodeId));
         return id;
