@@ -34,7 +34,7 @@ sap.ui.define([
                     // Update the model with the new MIDs
                     console.log(data.value)
                     oModel.setProperty("/mids", data.value.map(function(mid) {
-                        return { mid: mid };
+                        return { mid: mid.toString() };
                     }));
                 },
                 error: function (error) {

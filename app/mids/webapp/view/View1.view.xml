@@ -12,14 +12,14 @@
     xmlns:core="sap.ui.core"
     displayBlock="true">
     <App>
-        <Page title=" ">
+        <Page id="page" title="{i18n>title}">
             <customHeader>
                 <Bar>
                     <contentLeft>
-                        <core:Icon src="sap-icon://sap-logo" size="2rem"/>
+                        <Image src="" height="2rem"/>
                     </contentLeft>
                     <contentMiddle>
-                        <Title text="Generate MIDs" level="H1" titleStyle="H4" color="#0a6ed1"/>
+                        <Title class="customHeader" text="Generate MIDs" level="H1" titleStyle="H4"/>
                     </contentMiddle>
                 </Bar>
             </customHeader>
@@ -28,7 +28,7 @@
                     <HBox justifyContent="SpaceBetween" alignItems="End">
                         <VBox>
                             <Label text="Enter the Number of MIDs to be generated" labelFor="inputMIDs"/>
-                            <Input id="inputMIDs" value="6" width="auto"/>
+                            <Input id="inputMIDs" value="" width="auto" placeholder="e.g. 6"/>
                         </VBox>
                         <VBox>
                             <Button text="Go" press="onGeneratePress"/>
