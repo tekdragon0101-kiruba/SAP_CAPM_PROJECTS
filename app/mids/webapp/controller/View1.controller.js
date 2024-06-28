@@ -23,7 +23,7 @@ sap.ui.define([
                     // Update the model with the new MIDs
                     console.log(data.value)
                     oModel.setProperty("/mids", data.value.map(function(mids) {
-                        return { mids: mids.toString(), inputValue: "" };
+                        return { mids: mids.toString()};
                     }));  
                     // Get the table control
                     var oTable = oController.byId("midsTable");  // Use the stored reference
