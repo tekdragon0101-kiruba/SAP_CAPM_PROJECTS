@@ -1,15 +1,3 @@
-// sap.ui.define([
-//     "sap/ui/core/mvc/Controller"
-// ],
-// function (Controller) {
-//     "use strict";
-
-//     return Controller.extend("mids.controller.View1", {
-//         onInit: function () {
-
-//         }
-//     });
-// });
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
@@ -33,9 +21,9 @@ sap.ui.define([
                 success: function (data) {
                     // Update the model with the new MIDs
                     console.log(data.value)
-                    oModel.setProperty("/mids", data.value.map(function(mid) {
-                        return { mid: mid.toString() };
-                    }));
+                    oModel.setProperty("/mids", data.value.map(function(mids) {
+                        return { mids: mids.toString() };
+                    }));           
                 },
                 error: function (error) {
                     // Handle error
@@ -49,7 +37,7 @@ sap.ui.define([
             var aMIDs = oModel.getProperty("/mids");
 
             var oSettings = {
-                workbook: { columns: [{ label: 'MID', property: 'mid' }] },
+                workbook: { columns: [{ label: 'MIDs', property: 'mids' }] },
                 dataSource: aMIDs,
                 fileName: "MIDs.xlsx"
             };
