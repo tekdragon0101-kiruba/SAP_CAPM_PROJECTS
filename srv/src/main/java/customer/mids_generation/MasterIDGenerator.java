@@ -62,7 +62,7 @@ public class MasterIDGenerator {
         this.nodeId = nodeId;
     }
 
-    public synchronized long generateNextId() {
+    public synchronized String generateNextId() {
         long currentTimestamp = timestamp();
 
         if (currentTimestamp < lastTimestamp) {
@@ -86,7 +86,7 @@ public class MasterIDGenerator {
         return buildID(currentTimestamp, nodeId, sequence);
     }
 
-    private long buildID(long timestamp, int nodeId, int sequence) {
+    private String buildID(long timestamp, int nodeId, int sequence) {
         long id = timestamp << (TOTAL_BITS - EPOCH_BITS);
         id |= ((long) nodeId << (TOTAL_BITS - EPOCH_BITS - NODE_ID_BITS));
         id |= sequence;
@@ -95,7 +95,7 @@ public class MasterIDGenerator {
         System.out.println("Current Timestamp: " + timestamp + " | NodeID: " + nodeId + " | SequenceID: " + sequence);
         // Incrementing the node id
         setNodeId(nodeIdIncrement(nodeId));
-        return id;
+        return Long.toString(id);
     }
 
     // Block and wait till next millisecond

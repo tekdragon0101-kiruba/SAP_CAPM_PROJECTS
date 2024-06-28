@@ -1,4 +1,4 @@
-type IDList: array of Integer64;
+type IDList: array of String;
 
 service MasterIDService{
     function GenerateIDs(count: Integer) returns IDList;
