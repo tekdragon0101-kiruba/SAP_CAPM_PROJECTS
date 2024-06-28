@@ -1,29 +1,77 @@
----
-_schema-version: '3.1'
+_schema-version: "3.1"
 ID: mids_generation
+description: A CAP project for generate MasterIDs.
 version: 1.0.0-SNAPSHOT
-description: "A CAP project for generate MasterIDs."
-parameters:
-  enable-parallel-deployments: true
 modules:
-  - name: mids_generation-srv
-    type: java
-    path: srv
-    parameters:
-      buildpack: sap_java_buildpack_jakarta
-      readiness-health-check-type: http
-      readiness-health-check-http-endpoint: /
+- name: mids_generation-srv
+  type: java
+  path: srv
+  properties:
+    JBP_CONFIG_COMPONENTS: 'jres: [''com.sap.xs.java.buildpack.jre.SAPMachineJRE'']'
+    JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 17.+ }'
+    SPRING_PROFILES_ACTIVE: cloud,sandbox
+  provides:
+  - name: srv-api
     properties:
-      SPRING_PROFILES_ACTIVE: cloud,sandbox
-      JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
-      JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 17.+ }'
-    build-parameters:
-      builder: custom
-      commands:
-        - mvn clean package -DskipTests=true
-      build-result: target/*-exec.jar
-    provides:
-      - name: srv-api # required by consumers of CAP services (e.g. approuter)
-        properties:
-          srv-url: ${default-url}
-    requires: []
+      srv-url: ${default-url}
+  parameters:
+    buildpack: sap_java_buildpack_jakarta
+    readiness-health-check-http-endpoint: /
+    readiness-health-check-type: http
+  build-parameters:
+    build-result: target/*-exec.jar
+    builder: custom
+    commands:
+    - mvn clean package -DskipTests=true
+- name: mids_generation-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: mids_generation-repo-host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - mids.zip
+      name: mids
+      target-path: resources/
+- name: mids
+  type: html5
+  path: app/mids
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: mids_generation-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: mids_generation-html5-srv
+    service-plan: app-host
+- name: mids_generation-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: false
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: mids_generation-destination-service
+    service-plan: lite
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true

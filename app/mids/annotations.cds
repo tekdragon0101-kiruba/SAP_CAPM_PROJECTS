@@ -1,0 +1,1 @@
+using MasterIDService as service from '../../srv/service';
