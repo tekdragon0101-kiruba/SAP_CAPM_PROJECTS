@@ -1,7 +1,56 @@
-<mvc:View controllerName="mids.controller.View1"
+<!-- <mvc:View controllerName="mids.controller.View1"
     xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
     xmlns="sap.m">
     <Page id="page" title="{i18n>title}">
         <content />
     </Page>
+</mvc:View> -->
+<mvc:View
+    controllerName="mids.controller.View1"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
+    <App>
+        <Page title=" ">
+            <customHeader>
+                <Bar>
+                    <contentLeft>
+                        <core:Icon src="sap-icon://sap-logo" size="2rem"/>
+                    </contentLeft>
+                    <contentMiddle>
+                        <Title text="Generate MIDs" level="H1" titleStyle="H4" color="#0a6ed1"/>
+                    </contentMiddle>
+                </Bar>
+            </customHeader>
+            <content>
+                <VBox class="sapUiSmallMargin">
+                    <HBox justifyContent="SpaceBetween" alignItems="End">
+                        <VBox>
+                            <Label text="Enter the Number of MIDs to be generated" labelFor="inputMIDs"/>
+                            <Input id="inputMIDs" value="6" width="auto"/>
+                        </VBox>
+                        <VBox>
+                            <Button text="Go" press="onGeneratePress"/>
+                            <Button text="Export" press="onExportPress"/>
+                        </VBox>
+                    </HBox>
+                    <Table id="midsTable" items="{path: '/mids'}" visible="{= ${/mids}.length > 0 }">
+                        <columns>
+                            <Column>
+                                <Text text="MIDs"/>
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <ObjectIdentifier title="{mid}"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </VBox>
+            </content>
+        </Page>
+    </App>
 </mvc:View>
