@@ -13,7 +13,7 @@ sap.ui.define([
         },
 
         onGeneratePress: function () {
-            var iCount = this.getView().byId("inputMIDs").getValue();
+            var iCount = parseInt(this.getView().byId("inputMIDs").getValue());
             var oModel = this.getView().getModel("mids");
             var oController = this;  // Store reference to the controller
         

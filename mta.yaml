@@ -10,6 +10,8 @@ modules:
     JBP_CONFIG_COMPONENTS: 'jres: [''com.sap.xs.java.buildpack.jre.SAPMachineJRE'']'
     JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 17.+ }'
     SPRING_PROFILES_ACTIVE: cloud,sandbox
+  requires:
+  - name: mids_generation-uaa
   provides:
   - name: srv-api
     properties:
@@ -47,12 +49,48 @@ modules:
     - npm install
     - npm run build:cf
     supported-platforms: []
+- name: mids_generation-destinations
+  type: com.sap.application.content
+  requires:
+  - name: mids_generation-uaa
+    parameters:
+      service-key:
+        name: mids_generation-uaa-key
+  - name: mids_generation-repo-host
+    parameters:
+      service-key:
+        name: mids_generation-repo-host-key
+  - name: srv-api
+  - name: mids_generation-destination-service
+    parameters:
+      content-target: true
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Authentication: OAuth2UserTokenExchange
+          Name: mids_generation-app-srv
+          TokenServiceInstanceName: mids_generation-uaa
+          TokenServiceKeyName: mids_generation-uaa-key
+          URL: ~{srv-api/srv-url}
+          sap.cloud.service: mids_generation.service
+        - Name: mids_generation-repo-host
+          ServiceInstanceName: mids_generation-repo-host
+          ServiceKeyName: mids_generation-repo-host-key
+          sap.cloud.service: mids_generation.service
+        - Authentication: OAuth2UserTokenExchange
+          Name: mids_generation-uaa
+          ServiceInstanceName: mids_generation-uaa
+          ServiceKeyName: mids_generation-uaa-key
+          sap.cloud.service: mids_generation.service
+        existing_destinations_policy: update
+  build-parameters:
+    no-source: true
 resources:
 - name: mids_generation-repo-host
   type: org.cloudfoundry.managed-service
   parameters:
     service: html5-apps-repo
-    service-name: mids_generation-html5-srv
     service-plan: app-host
 - name: mids_generation-destination-service
   type: org.cloudfoundry.managed-service
@@ -68,10 +106,18 @@ resources:
             Type: HTTP
             URL: https://ui5.sap.com
           existing_destinations_policy: update
-      version: 1.0.0
     service: destination
     service-name: mids_generation-destination-service
     service-plan: lite
+- name: mids_generation-uaa
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      tenant-mode: dedicated
+      xsappname: mids_generation-${org}-${space}
+    path: ./xs-security.json
+    service: xsuaa
+    service-plan: application
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
