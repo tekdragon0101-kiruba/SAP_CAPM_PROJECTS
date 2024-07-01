@@ -29,8 +29,7 @@ sap.ui.define([
                     var oTable = oController.byId("midsTable");  // Use the stored reference
         
                     // Set the model for the table
-                    oTable.setModel(oModel); 
-                    console.log("oddjak"); 
+                    oTable.setModel(oModel);         
                 },
                 error: function (error) {
                     // Handle error
