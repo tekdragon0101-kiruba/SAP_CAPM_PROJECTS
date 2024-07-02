@@ -97,15 +97,15 @@ resources:
   parameters:
     config:
       HTML5Runtime_enabled: true
-      init_data:
-        instance:
-          destinations:
-          - Authentication: NoAuthentication
-            Name: ui5
-            ProxyType: Internet
-            Type: HTTP
-            URL: https://ui5.sap.com
-          existing_destinations_policy: update
+      # init_data:
+      #   instance:
+      #     destinations:
+      #     - Authentication: NoAuthentication
+      #       Name: ui5
+      #       ProxyType: Internet
+      #       Type: HTTP
+      #       URL: https://ui5.sap.com
+      #     existing_destinations_policy: update
     service: destination
     service-name: mids_generation-destination-service
     service-plan: lite
