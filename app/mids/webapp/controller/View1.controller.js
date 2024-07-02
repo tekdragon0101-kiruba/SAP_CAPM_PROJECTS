@@ -19,7 +19,7 @@ sap.ui.define([
         
             // Call the backend service
             $.ajax({
-                url: "/odata/v4/MasterIDService/GenerateIDs(count=" + iCount + ")",
+                url: "odata/v4/MasterIDService/GenerateIDs(count=" + iCount + ")",
                 method: "GET",
                 success: function (data) {
                     // Update the model with the new MIDs
