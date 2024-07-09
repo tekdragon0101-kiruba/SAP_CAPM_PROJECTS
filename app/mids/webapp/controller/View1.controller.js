@@ -16,10 +16,11 @@ sap.ui.define([
             var iCount = parseInt(this.getView().byId("inputMIDs").getValue());
             var oModel = this.getView().getModel("mids");
             var oController = this;  // Store reference to the controller
-        
+            // get the url dynamically
+            var oSrvUrl = oController.getOwnerComponent()._mManifestModels[""].sServiceUrl;
             // Call the backend service
             $.ajax({
-                url: "odata/v4/MasterIDService/GenerateIDs(count=" + iCount + ")",
+                url: oSrvUrl + "GenerateIDs(count=" + iCount + ")",
                 method: "GET",
                 success: function (data) {
                     // Update the model with the new MIDs
