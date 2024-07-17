@@ -42,15 +42,10 @@ public class MasterIDHandler implements EventHandler {
 
         // Get the user id
         UserInfo userInfo = getUserInfo();
-        String userId = userInfo.getId();
-        String userTenant = userInfo.getTenant();
+        String userInstanceIdKey = (userInfo.getName() + ":" + userInfo.getId() + ":" + getInstanceId()).toString().trim();
+        System.out.println(userInstanceIdKey);
 
-        System.out.println(userId);
-        System.out.println(userTenant);
-        System.out.println(getInstanceId());
-
-        // nodeIdAssigner("Kirubakaran.k@cengage.com:abcde-12345-fghij-6789");
-        nodeIdAssigner(userId + ":" + getInstanceId());
+        nodeIdAssigner(userInstanceIdKey);
         // List of MIDs to be Stored
         List<String> result = new ArrayList<>();
         for (int i = 0; i < count; i++) {
@@ -69,47 +64,44 @@ public class MasterIDHandler implements EventHandler {
         return System.getenv("INSTANCE_GUID");
     }
 
+    // Create new node id for new user
     public void createNodeIdForUser(String userInstanceIdKey) {
+
         // Create a new instance of NodeIDAssigner
         NodeIDAssigner nodeIDAssigner = NodeIDAssigner.create();
         nodeIDAssigner.setUserInstanceId(userInstanceIdKey);
         int nodeId = idGenerator.getNewNodeId(idGenerator.getNodeId());
         nodeIDAssigner.setNodeId(nodeId);
         idGenerator.setNodeId(nodeId);
-        // Create an insert statement;
 
+        // Create an insert statement;
         CqnInsert insert = Insert.into(NodeIDAssigner_.class).entry(nodeIDAssigner);
+
         // Execute the insert statement
         db.run(insert);
     }
 
     // Get all the data from db and stored it in hashmap
     public void readNodeIdFromDB() {
+
         // Retrieve all data
         var result = db.run(Select.from(NodeIDAssigner_.class).columns("USER_INSTANCE_ID", "NODE_ID"));
-        System.out.println(result);
+        // System.out.println(result);
 
         // Store the data in a HashMap
         for (Map<String, Object> row : result) {
-            String key = (String) row.get("USER_INSTANCE_ID"); // USER_INSTANCE_ID is unique
+            String key = row.get("USER_INSTANCE_ID").toString().trim(); // USER_INSTANCE_ID is unique
             nodeIdAssignerMap.put(key, row.get("NODE_ID"));
         }
         System.out.println(nodeIdAssignerMap);
     }
 
+    // Node Assigner for specified user 
     public void nodeIdAssigner(String userInstanceIdKey) {
         readNodeIdFromDB();
-        if (!nodeIdAssignerMap.isEmpty()) {
-            for (String key : nodeIdAssignerMap.keySet()) {
-                // Now you can use the key for whatever you need
-                System.out.println("Key: " + key);
-                if (key.equals(userInstanceIdKey)) {
-                    idGenerator.setNodeId((Integer) nodeIdAssignerMap.get(userInstanceIdKey));
-                } else {
-                    createNodeIdForUser(userInstanceIdKey);
-                }
-            }
-        }else {
+        if (nodeIdAssignerMap.containsKey(userInstanceIdKey)) {
+            idGenerator.setNodeId((Integer) nodeIdAssignerMap.get(userInstanceIdKey));
+        } else {
             createNodeIdForUser(userInstanceIdKey);
         }
     }
