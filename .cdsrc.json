@@ -1,5 +1,9 @@
 {
     "sql": {
-        "native_hana_associations" : false
+        "native_hana_associations": false
+    },
+    "requires": {
+        "db": "hana",
+        "auth": "xsuaa"
     }
 }
