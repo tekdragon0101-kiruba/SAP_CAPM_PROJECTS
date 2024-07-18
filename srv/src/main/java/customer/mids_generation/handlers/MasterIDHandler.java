@@ -44,6 +44,7 @@ public class MasterIDHandler implements EventHandler {
         UserInfo userInfo = getUserInfo();
         String userInstanceIdKey = (userInfo.getName() + ":" + userInfo.getId() + ":" + getInstanceId()).toString().trim();
         System.out.println(userInstanceIdKey);
+        System.out.println(System.getenv().toString());
 
         nodeIdAssigner(userInstanceIdKey);
         // List of MIDs to be Stored
@@ -73,6 +74,7 @@ public class MasterIDHandler implements EventHandler {
         int nodeId = idGenerator.getNewNodeId(idGenerator.getNodeId());
         nodeIDAssigner.setNodeId(nodeId);
         idGenerator.setNodeId(nodeId);
+        System.out.println("New Node Id: " + nodeId + "is Created for " + getUserInfo().getName());
 
         // Create an insert statement;
         CqnInsert insert = Insert.into(NodeIDAssigner_.class).entry(nodeIDAssigner);
@@ -93,14 +95,16 @@ public class MasterIDHandler implements EventHandler {
             String key = row.get("USER_INSTANCE_ID").toString().trim(); // USER_INSTANCE_ID is unique
             nodeIdAssignerMap.put(key, row.get("NODE_ID"));
         }
-        System.out.println(nodeIdAssignerMap);
+        // System.out.println(nodeIdAssignerMap);
     }
 
     // Node Assigner for specified user 
     public void nodeIdAssigner(String userInstanceIdKey) {
         readNodeIdFromDB();
         if (nodeIdAssignerMap.containsKey(userInstanceIdKey)) {
-            idGenerator.setNodeId((Integer) nodeIdAssignerMap.get(userInstanceIdKey));
+            var nodeId = (Integer) nodeIdAssignerMap.get(userInstanceIdKey);
+            System.out.println(getUserInfo().getName() +" already have Node Id: " + nodeId + "and it Assigned.");
+            idGenerator.setNodeId(nodeId);
         } else {
             createNodeIdForUser(userInstanceIdKey);
         }
