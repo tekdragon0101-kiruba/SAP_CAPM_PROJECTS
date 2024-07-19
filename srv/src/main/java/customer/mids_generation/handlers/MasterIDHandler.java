@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,6 +47,27 @@ public class MasterIDHandler implements EventHandler {
         String userInstanceIdKey = (userInfo.getName() + ":" + userInfo.getId() + ":" + getInstanceId()).toString().trim();
         System.out.println("User Instance Key: " + userInstanceIdKey);
         System.out.println("ENV: " + System.getenv().toString());
+         // Retrieve the organization_name environment variable
+        String organizationName = System.getenv("VCAP_APPLICATION");
+
+         if (organizationName != null) {
+             // Parse the JSON to get the organization_name
+             try {
+                 JSONObject vcapApplication = new JSONObject(organizationName);
+                 String orgName = vcapApplication.getString("organization_name");
+                 String orgId = vcapApplication.getString("organization_id");
+                 String orgSubaccount = vcapApplication.getString("identityzone");
+                 String orgSubaccountId = vcapApplication.getString("identityzoneid");
+                 System.out.print("Organization Name: " + orgName);
+                 System.out.print(" | Organization Id: " + orgId);
+                 System.out.print(" | Subaccount Name: " + orgSubaccount);
+                 System.out.println(" | Subaccount Name Id: " + orgSubaccountId);
+             } catch (JSONException e) {
+                 e.printStackTrace();
+             }
+         } else {
+             System.out.println("VCAP_APPLICATION environment variable not found.");
+         }
 
         nodeIdAssigner(userInstanceIdKey);
         // List of MIDs to be Stored
