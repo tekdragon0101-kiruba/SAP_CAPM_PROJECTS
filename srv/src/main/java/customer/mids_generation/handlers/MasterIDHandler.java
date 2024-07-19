@@ -44,7 +44,7 @@ public class MasterIDHandler implements EventHandler {
         UserInfo userInfo = getUserInfo();
         String userInstanceIdKey = (userInfo.getName() + ":" + userInfo.getId() + ":" + getInstanceId()).toString().trim();
         System.out.println("User Instance Key: " + userInstanceIdKey);
-        System.out.println(System.getenv().toString());
+        System.out.println("ENV: " + System.getenv().toString());
 
         nodeIdAssigner(userInstanceIdKey);
         // List of MIDs to be Stored
